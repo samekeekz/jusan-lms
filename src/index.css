@@ -24,6 +24,11 @@ input[type="text"]:focus {
   outline: none;
 }
 
+textarea:focus {
+  border: none;
+  outline: none;
+}
+
 input[type="checkbox"] {
   -webkit-appearance: none;
   -moz-appearance: none;
