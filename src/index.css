@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 16px;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -13,4 +17,40 @@
 body {
   font-family: "Montserrat", sans-serif;
   background-color: #f3f4f6;
+}
+
+input[type="text"]:focus {
+  border: none;
+  outline: none;
+}
+
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #cbd5e0;
+  border-radius: 4px;
+  background-color: #fff;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+input[type="checkbox"]:checked::before {
+  background-color: #4299e1;
+  border-color: #4299e1;
+}
+
+input[type="checkbox"]:focus-visible::before {
+  box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.5);
 }
