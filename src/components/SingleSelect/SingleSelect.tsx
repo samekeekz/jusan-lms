@@ -2,10 +2,17 @@ import React, { useState } from "react";
 
 interface SingleSelectProps {
   name: string;
+  header: string;
   options: string[];
+  onSelect: (name: string, option: string) => void;
 }
 
-const SingleSelect: React.FC<SingleSelectProps> = ({ name, options }) => {
+const SingleSelect: React.FC<SingleSelectProps> = ({
+  name,
+  header,
+  options,
+  onSelect,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
@@ -15,6 +22,7 @@ const SingleSelect: React.FC<SingleSelectProps> = ({ name, options }) => {
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
+    onSelect(name, option); // Call onSelect function to update parent component's state
     setIsOpen(false);
   };
 
@@ -22,12 +30,12 @@ const SingleSelect: React.FC<SingleSelectProps> = ({ name, options }) => {
 
   return (
     <div className="relative">
-      <h4>{name}</h4>
+      <h4>{header}</h4>
       <div
         className="flex items-center justify-between bg-[#D9D9D9] px-4 py-3 rounded cursor-pointer"
         onClick={toggleOptions}
       >
-        <span className="font-medium text-[#9D9D9D]">
+        <span className="font-medium text-black">
           {selectedOption || options[0]}
         </span>
         <span className="ml-2 text-white">{isOpen ? "▲" : "▼"}</span>
