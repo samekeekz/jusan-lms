@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { ChangeEvent } from "react";
 
 interface ImageUploaderProps {
   selectedImage: File | null;
@@ -11,14 +11,19 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   previewURL,
   onImageSelect,
 }) => {
-  // const [file, setFile] = useState<File | null>(null);
-  // const [previewURL, setPreviewURL] = useState<string>("");
-
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (!selectedFile) return;
 
-    onImageSelect(selectedFile, URL.createObjectURL(selectedFile));
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64String = event.target?.result as string;
+      // localStorage.setItem("uploadedImage", base64String);
+      onImageSelect(selectedFile, base64String);
+    };
+    reader.readAsDataURL(selectedFile);
+
+    // onImageSelect(selectedFile, URL.createObjectURL(selectedFile));
   };
 
   return (

@@ -40,10 +40,12 @@ const CourseCreation = () => {
       language: selectedOptions.language,
       level: selectedOptions.level,
       recommended_load: selectedOptions.load,
-      logo: selectedImage?.name || "",
+      logo: selectedImage || new File([], ""),
       video: "",
       modules: [],
     };
+
+    localStorage.setItem(data.course_name, previewURL);
 
     console.log(data);
 

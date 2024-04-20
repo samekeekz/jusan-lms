@@ -7,7 +7,7 @@ export interface CourseState {
 
 export interface Course {
   id: number;
-  logo: string;
+  logo: File;
   video: string;
   course_name: string;
   course_description: string;

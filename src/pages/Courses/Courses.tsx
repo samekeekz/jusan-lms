@@ -12,29 +12,54 @@ import { Link } from "react-router-dom";
 
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  // const courses = useAppSelector((state) => state.course.courses);
+  const courses = useAppSelector((state) => state.course.courses);
 
-  const courses = [
-    {
-      id: 1,
-      course_name: "Курс по программированию",
-      course_description: "Курс по программированию на языке Python",
-    },
-    {
-      id: 2,
-      course_name: "Курс по дизайну",
-      course_description: "Курс по дизайну на языке Figma",
-    },
-    {
-      id: 3,
-      course_name: "Курс по маркетингу",
-      course_description: "Курс по маркетингу в социальных сетях",
-    },
-  ];
+  // const courses = [
+  //   {
+  //     id: 1,
+  //     course_name: "Курс по программированию",
+  //     course_description: "Курс по программированию на языке Python",
+  //   },
+  //   {
+  //     id: 2,
+  //     course_name: "Курс по дизайну",
+  //     course_description: "Курс по дизайну на языке Figma",
+  //   },
+  //   {
+  //     id: 3,
+  //     course_name: "Курс по маркетингу",
+  //     course_description: "Курс по маркетингу в социальных сетях",
+  //   },
+  //   {
+  //     id: 3,
+  //     course_name: "Курс по маркетингу",
+  //     course_description: "Курс по маркетингу в социальных сетях",
+  //   },
+  //   {
+  //     id: 3,
+  //     course_name: "Курс по маркетингу",
+  //     course_description: "Курс по маркетингу в социальных сетях",
+  //   },
+  //   {
+  //     id: 3,
+  //     course_name: "Курс по маркетингу",
+  //     course_description: "Курс по маркетингу в социальных сетях",
+  //   },
+  //   {
+  //     id: 3,
+  //     course_name: "Курс по маркетингу",
+  //     course_description: "Курс по маркетингу в социальных сетях",
+  //   },
+  //   {
+  //     id: 3,
+  //     course_name: "Курс по маркетингу",
+  //     course_description: "Курс по маркетингу в социальных сетях",
+  //   },
+  // ];
 
   const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses);
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     filterCourses(e.target.value);
   };
@@ -72,32 +97,42 @@ const Courses = () => {
         )}
         <div className="mt-10 max-w-full">
           {courses.length > 0 ? (
-            <div className="flex h-full max-w-full flex-wrap gap-5">
-              {(filteredCourses as typeof courses).map((course) => (
-                <div
-                  key={course.id}
-                  className="w-[227px] flex flex-col rounded-[20px] bg-[#D9D9D9] px-[10px] pt-[10px] pb-5"
-                >
-                  <div className="bg-white w-full h-[120px] rounded-[20px] mb-2"></div>
-                  <p className="mb-1 text-[13px] font-bold">
-                    {course.course_name}
-                  </p>
-                  <p className="mb-5 text-[10px] leading-[15px]">
-                    {course.course_description}
-                  </p>
-                  <span className="grow"></span>
-                  <Link
-                    className="cursor-pointer bg-white px-5 py-0.5 rounded-[20px] font-semibold hover:bg-[#d1cccc] text-[10px] leading-[15px] block mx-auto"
-                    to={`/course/${course.id}`}
+            <div className="w-full flex flex-col">
+              <div className="flex justify-start gap-7 max-w-full flex-wrap">
+                {(filteredCourses as typeof courses).map((course) => (
+                  <div
+                    key={course.id}
+                    className="w-[227px] h-[250px] flex flex-col rounded-[20px] bg-[#D9D9D9] px-[10px] pt-[10px] pb-5 overflow-hidden"
                   >
-                    Перейти
-                  </Link>
-                </div>
-              ))}
-              <span className="grow"></span>
+                    <div className="bg-white w-full h-[120px] rounded-[20px] mb-2 flex justify-center items-center">
+                      {course.logo && (
+                        <img
+                          className="max-w-full max-h-full object-contain"
+                          key={course.course_name}
+                          src={localStorage.getItem(course.course_name) || ""}
+                          alt={`Image ${course.logo}`}
+                        />
+                      )}
+                    </div>
+                    <p className="mb-1 text-[13px] font-bold">
+                      {course.course_name}
+                    </p>
+                    <p className="mb-5 text-[10px] leading-[15px]">
+                      {course.course_description}
+                    </p>
+                    <span className="grow"></span>
+                    <Link
+                      className="cursor-pointer bg-white px-5 py-0.5 rounded-[20px] font-semibold hover:bg-[#d1cccc] text-[10px] leading-[15px] block mx-auto"
+                      to={`/course/${course.id}`}
+                    >
+                      Перейти
+                    </Link>
+                  </div>
+                ))}
+              </div>
               <Link
                 to="/courses/create"
-                className="bg-[#D9D9D9] hover:bg-[#A9A9A9] py-2 px-20 rounded-[10px]"
+                className="bg-[#D9D9D9] mt-10 self-center block mx-auto hover:bg-[#A9A9A9] py-2 px-20 rounded-[10px]"
               >
                 Создать курс
               </Link>
