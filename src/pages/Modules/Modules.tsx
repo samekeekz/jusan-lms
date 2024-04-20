@@ -15,13 +15,12 @@ const Modules = () => {
   const handleAddModule = () => {
     const newModule = {
       id: editedModules.length + 1,
-      module_name: "New Module",
-      module_description: "New Module description",
+      module_name: "",
+      module_description: "",
       lessons: [
         {
           id: 1,
-          lesson_name: "Lesson 1",
-          lesson_description: "Lesson 1 description",
+          lesson_name: "",
         },
       ],
     };
@@ -54,7 +53,7 @@ const Modules = () => {
       if (module.id === moduleId) {
         const newLesson = {
           id: module.lessons.length + 1,
-          lesson_name: `Lesson ${module.lessons.length + 1}`,
+          lesson_name: "",
         };
         return { ...module, lessons: [...module.lessons, newLesson] };
       }
@@ -73,89 +72,120 @@ const Modules = () => {
           {editedModules?.length > 0 ? (
             <div className="w-full flex flex-col">
               {editMode ? (
-                <div className="w-full flex flex-col gap-4">
+                <div className="w-full flex flex-col gap-9">
                   {editedModules?.map((module) => (
-                    <div
-                      key={module.id}
-                      className="w-full border-[2px] border-solid border-[#D9D9D9] py-6 px-9 flex flex-col gap-2"
-                    >
-                      <input
-                        className="border-[#D9D9D9] border-[2px] border-solid rounded-[10px] py-5 px-4"
-                        type="text"
-                        value={module.module_name}
-                        onChange={(e) =>
-                          handleModuleChange(
-                            module.id,
-                            "module_name",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <textarea
-                        className="border-[#D9D9D9] border-[2px] border-solid rounded-[10px] py-3 px-5"
-                        value={module.module_description}
-                        onChange={(e) =>
-                          handleModuleChange(
-                            module.id,
-                            "module_description",
-                            e.target.value
-                          )
-                        }
-                      />
-                      {module.lessons.map((lesson, index) => (
+                    <div className="">
+                      <div className="flex gap-4">
+                        <p className="pt-7 font-bold">{module.id}</p>
                         <div
-                          className="w-full flex flex-col gap-3 relative"
-                          key={lesson.id}
+                          key={module.id}
+                          className="w-full border-l-[#FF0000] border-l-[3px] border-[2px] border-solid border-[#D9D9D9] py-6 pl-9 pr-[65px] flex flex-col gap-4"
                         >
-                          <input
-                            className="grow border-[#D9D9D9] border-[2px] border-solid py-[6px] px-3"
-                            type="text"
-                            value={lesson.lesson_name}
-                            readOnly
-                          />
-                          {index !== editModules.length - 1 && (
-                            <span className="cursor-pointer absolute top-0 -right-5">
-                              X
-                            </span>
-                          )}
-
-                          {index === module.lessons.length - 1 && (
-                            <div className="flex gap-5 w-full">
-                              <input
-                                className="grow border-[#D9D9D9] border-[2px] border-solid py-[6px] px-3"
-                                type="text"
-                                value="Введите название урока и нажмите Enter"
-                                readOnly
-                              />
-                              <button
-                                className="shrink-0 border-[#D9D9D9] border-[2px] border-solid py-[6px] px-3"
-                                onClick={() => handleAddLesson(module.id)}
-                              >
-                                Add Lesson
-                              </button>
-                            </div>
-                          )}
+                          <div className="border-[#D9D9D9] border-[2px] border-solid rounded-[10px] py-[5px] px-4">
+                            <input
+                              className="text-lg w-full"
+                              type="text"
+                              placeholder="Название модуля"
+                              onChange={(e) =>
+                                handleModuleChange(
+                                  module.id,
+                                  "module_name",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="border-[#D9D9D9] border-[2px] border-solid rounded-[10px] py-[5px] px-4">
+                            <textarea
+                              className="text-lg w-full"
+                              placeholder="Описание модуля"
+                              onChange={(e) =>
+                                handleModuleChange(
+                                  module.id,
+                                  "module_description",
+                                  e.target.value
+                                )
+                              }
+                              rows={1}
+                            />
+                          </div>
                         </div>
-                      ))}
+                      </div>
+                      <div className="border-[2px] border-t-0 border-solid border-[#D9D9D9] py-4 pl-5 pr-[65px] ml-[67px] max-w-full flex flex-col gap-3 relative">
+                        {module.lessons.map((lesson, index) => (
+                          <>
+                            <div className="flex items-center gap-3">
+                              <p>
+                                {module.id}.{lesson.id}
+                              </p>
+                              <div className="grow shrink-0 border-[#D9D9D9] border-[2px] border-solid py-[6px] px-3">
+                                <input
+                                  className=""
+                                  type="text"
+                                  placeholder="Название урока"
+                                />
+                              </div>
+                              {index !== editModules.length - 1 && (
+                                <span className="cursor-pointer ">X</span>
+                              )}
+                            </div>
+                            {index === module.lessons.length - 1 && (
+                              <div className="flex gap-3 w-full">
+                                <p className="invisible">
+                                  {module.id}.{lesson.id}
+                                </p>
+                                <div className="grow shrink-0 border-[#D9D9D9] border-[2px] border-solid py-[6px] px-3">
+                                  <input
+                                    className="w-full"
+                                    type="text"
+                                    placeholder="Введите название урока и нажмите Enter"
+                                  />
+                                </div>
+                                <button
+                                  className="shrink-0 border-[#D9D9D9] border-[2px] border-solid py-[6px] px-3 mr-[22px]"
+                                  onClick={() => handleAddLesson(module.id)}
+                                >
+                                  + Создать урок
+                                </button>
+                              </div>
+                            )}
+                          </>
+                        ))}
+                      </div>
                     </div>
                   ))}
                   <button
-                    className="bg-[#D9D9D9] hover:bg-[#A9A9A9] py-2 px-20 rounded-[10px]"
+                    className="self-center bg-[#D9D9D9] hover:bg-[#A9A9A9] py-2 px-8 rounded-[10px]"
                     onClick={handleAddModule}
                   >
-                    Add Module
+                    + Новый Модуль
                   </button>
                   <button
-                    className="bg-[#D9D9D9] hover:bg-[#A9A9A9] py-2 px-20 rounded-[10px]"
+                    className="self-center bg-[#D9D9D9] hover:bg-[#A9A9A9] py-2 px-8 rounded-[10px]"
                     onClick={handleSave}
                   >
-                    Save
+                    Сохранить
                   </button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-4">
-                  <button onClick={() => setEditMode(true)}>
-                    Редактировать содержание
+                  <button
+                    className="self-start flex items-center gap-2 bg-[#D9D9D9] hover:bg-[#A9A9A9] py-2 px-20 rounded-[10px]"
+                    onClick={() => setEditMode(true)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M14.293 3.293a1 1 0 0 1 1.414 0l1 1a1 1 0 0 1 0 1.414l-9 9a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391l9-9zM13 5l2-2v2h2l-2 2-2-2zm-1.293 1.293l-8 8-1.586-.586 8-8 1.586.586z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <p>Редактировать содержание</p>
                   </button>
                   {editedModules?.map((module) => (
                     <div key={module.id} className="flex flex-col gap-2">
