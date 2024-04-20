@@ -48,6 +48,26 @@ const Modules = () => {
     setEditedModules(updatedModules);
   };
 
+  const handleLessonChange = (
+    moduleId: number,
+    lessonIndex: number,
+    value: string
+  ) => {
+    const updatedModules = editedModules.map((module) => {
+      if (module.id === moduleId) {
+        const updatedLessons = module.lessons.map((lesson, index) => {
+          if (index === lessonIndex) {
+            return { ...lesson, lesson_name: value };
+          }
+          return lesson;
+        });
+        return { ...module, lessons: updatedLessons };
+      }
+      return module;
+    });
+    setEditedModules(updatedModules);
+  };
+
   const handleAddLesson = (moduleId: number) => {
     const updatedModules = editedModules.map((module) => {
       if (module.id === moduleId) {
@@ -123,6 +143,13 @@ const Modules = () => {
                                   className=""
                                   type="text"
                                   placeholder="Название урока"
+                                  onChange={(e) =>
+                                    handleLessonChange(
+                                      module.id,
+                                      index,
+                                      e.target.value
+                                    )
+                                  }
                                 />
                               </div>
                               {index !== editModules.length - 1 && (
