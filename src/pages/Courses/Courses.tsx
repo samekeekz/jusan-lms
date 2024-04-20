@@ -131,7 +131,7 @@ const Courses = () => {
                 ))}
               </div>
               <Link
-                to="/courses/create"
+                to="/course/create"
                 className="bg-[#D9D9D9] mt-10 self-center block mx-auto hover:bg-[#A9A9A9] py-2 px-20 rounded-[10px]"
               >
                 Создать курс
@@ -142,7 +142,7 @@ const Courses = () => {
               <div className="w-[435px] h-[400px] rounded-[20px] bg-[#D9D9D9] mb-12"></div>
               <p className="mb-16">У Вас пока нет курсов, создайте первый</p>
               <Link
-                to="/courses/create"
+                to="/course/create"
                 className="bg-[#D9D9D9] hover:bg-[#A9A9A9] py-2 px-20 rounded-[10px]"
               >
                 Создать курс

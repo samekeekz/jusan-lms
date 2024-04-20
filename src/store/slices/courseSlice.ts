@@ -21,14 +21,13 @@ export interface Course {
 interface Module {
   id: number;
   module_name: string;
+  module_description: string;
   lessons: Lesson[];
 }
 
 interface Lesson {
   id: number;
   lesson_name: string;
-  lesson_description: string;
-  video: string;
 }
 
 const initialState: CourseState = {
@@ -94,12 +93,27 @@ const courseSlice = createSlice({
         }
       }
     },
+    editModules(
+      state,
+      action: PayloadAction<{ courseId: number; modules: Module[] }>
+    ) {
+      const { courseId, modules } = action.payload;
+      const course = state.courses.find((c) => c.id === courseId);
+      if (course) {
+        course.modules = modules;
+      }
+    },
   },
 });
 
 const { actions, reducer } = courseSlice;
 
-export const { addCourse, editCourse, addModuleToCourse, addLessonToModule } =
-  actions;
+export const {
+  addCourse,
+  editCourse,
+  addModuleToCourse,
+  editModules,
+  addLessonToModule,
+} = actions;
 
 export default reducer;

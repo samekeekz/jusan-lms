@@ -1,12 +1,13 @@
 import Logo from "@/assets/Logo.png";
-import { Link, NavLink, useParams } from "react-router-dom";
+import { Link, NavLink, useMatch, useParams } from "react-router-dom";
 import IconSettings from "@/assets/Vector.svg";
 import { useState } from "react";
 
 const SidebarCourse = () => {
   const [isCoursesOpen, setIsCoursesOpen] = useState(true);
-
   const { id } = useParams();
+  const isCreateActive = useMatch("/course/create");
+  const isDescriptionActive = useMatch(`/course/${id}/description`);
 
   const toggleCoursesDropdown = () => {
     setIsCoursesOpen((prev) => !prev);
@@ -74,33 +75,42 @@ const SidebarCourse = () => {
               <li className="pl-[34px] text-[10px] font-medium leading-5 text-black hover:text-[#FF0000]">
                 <NavLink
                   to={`/course/${id}/description`}
-                  className={({ isActive }) =>
-                    [isActive ? "text-[#FF0000]" : ""].join(" ")
+                  className={
+                    isCreateActive || isDescriptionActive
+                      ? "text-[#FF0000]"
+                      : ""
                   }
+                  style={{ display: "block" }}
                 >
                   Описание
                 </NavLink>
               </li>
-              <li className="pl-[34px] text-[10px] font-medium leading-5 text-black hover:text-[#FF0000]">
-                <NavLink
-                  to={`/course/${id}/content`}
-                  className={({ isActive }) =>
-                    [isActive ? "text-[#FF0000]" : ""].join(" ")
-                  }
-                >
-                  Содержание
-                </NavLink>
-              </li>
-              <li className="pl-[34px] text-[10px] font-medium leading-5 text-black hover:text-[#FF0000]">
-                <NavLink
-                  to={`/course/${id}/checklist`}
-                  className={({ isActive }) =>
-                    [isActive ? "text-[#FF0000]" : ""].join(" ")
-                  }
-                >
-                  Чек-лист
-                </NavLink>
-              </li>
+              {!isCreateActive && (
+                <>
+                  <li className="pl-[34px] text-[10px] font-medium leading-5 text-black hover:text-[#FF0000]">
+                    <NavLink
+                      to={`/course/${id}/content`}
+                      className={({ isActive }) =>
+                        [isActive ? "text-[#FF0000]" : ""].join(" ")
+                      }
+                      style={{ display: "block" }}
+                    >
+                      Содержание
+                    </NavLink>
+                  </li>
+                  <li className="pl-[34px] text-[10px] font-medium leading-5 text-black hover:text-[#FF0000]">
+                    <NavLink
+                      to={`/course/${id}/checklist`}
+                      className={({ isActive }) =>
+                        [isActive ? "text-[#FF0000]" : ""].join(" ")
+                      }
+                      style={{ display: "block" }}
+                    >
+                      Чек-лист
+                    </NavLink>
+                  </li>
+                </>
+              )}
             </ul>
           )}
         </li>
