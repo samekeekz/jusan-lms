@@ -32,7 +32,20 @@ interface Lesson {
 }
 
 const initialState: CourseState = {
-  courses: [],
+  courses: [
+    {
+      id: 1,
+      logo: new File([], ""),
+      video: "",
+      course_name: "Курс по программированию",
+      course_description: "Курс по программированию на языке Python",
+      language: "Казахский",
+      level: "Начинающий",
+      recommended_load: "4-5 часов в неделю",
+      learn_description: "Курс по программированию на языке Python",
+      modules: [],
+    },
+  ],
 };
 
 const courseSlice = createSlice({
@@ -45,6 +58,14 @@ const courseSlice = createSlice({
         ...action.payload,
       };
       state.courses.push(newCourse);
+    },
+    editCourse(state, action: PayloadAction<Course>) {
+      const index = state.courses.findIndex(
+        (course) => course.id === action.payload.id
+      );
+      if (index !== -1) {
+        state.courses[index] = { ...state.courses[index], ...action.payload };
+      }
     },
     addModuleToCourse(
       state,
@@ -78,6 +99,7 @@ const courseSlice = createSlice({
 
 const { actions, reducer } = courseSlice;
 
-export const { addCourse, addModuleToCourse, addLessonToModule } = actions;
+export const { addCourse, editCourse, addModuleToCourse, addLessonToModule } =
+  actions;
 
 export default reducer;

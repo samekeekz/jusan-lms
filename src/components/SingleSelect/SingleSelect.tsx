@@ -4,6 +4,7 @@ interface SingleSelectProps {
   name: string;
   header: string;
   options: string[];
+  selected?: string | null;
   onSelect: (name: string, option: string) => void;
 }
 
@@ -11,6 +12,7 @@ const SingleSelect: React.FC<SingleSelectProps> = ({
   name,
   header,
   options,
+  selected,
   onSelect,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,11 +24,11 @@ const SingleSelect: React.FC<SingleSelectProps> = ({
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
-    onSelect(name, option); // Call onSelect function to update parent component's state
+    onSelect(name, option);
     setIsOpen(false);
   };
 
-  const filteredOptions = options.slice(1);
+  const filteredOptions = selected ? options : options.slice(1);
 
   return (
     <div className="relative">
@@ -36,7 +38,7 @@ const SingleSelect: React.FC<SingleSelectProps> = ({
         onClick={toggleOptions}
       >
         <span className="font-medium text-black">
-          {selectedOption || options[0]}
+          {selected ? selected : selectedOption ? selectedOption : options[0]}
         </span>
         <span className="ml-2 text-white">{isOpen ? "▲" : "▼"}</span>
       </div>

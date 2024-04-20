@@ -123,7 +123,7 @@ const Courses = () => {
                     <span className="grow"></span>
                     <Link
                       className="cursor-pointer bg-white px-5 py-0.5 rounded-[20px] font-semibold hover:bg-[#d1cccc] text-[10px] leading-[15px] block mx-auto"
-                      to={`/course/${course.id}`}
+                      to={`/course/${course.id}/description`}
                     >
                       Перейти
                     </Link>

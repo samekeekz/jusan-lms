@@ -3,6 +3,7 @@ import RootLayout from "./layout/RootLayout/RootLayout";
 import Courses from "./pages/Courses/Courses";
 import CourseCreation from "./pages/CourseCreation/CourseCreation";
 import CourseLayout from "./layout/CourseLayout/CourseLayout";
+import CourseEdit from "./pages/CourseEdit/CourseEdit";
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Route path="courses/create" element={<CourseCreation />} />
       </Route>
       <Route path="/" element={<CourseLayout />}>
-        <Route path="course/:id/description" element={<h1>Course</h1>} />
+        <Route path="course/:id/description" element={<CourseEdit />} />
         <Route path="course/:id/content" element={<h1>Course</h1>} />
         <Route path="course/:id/checklist" element={<h1>Course</h1>} />
       </Route>

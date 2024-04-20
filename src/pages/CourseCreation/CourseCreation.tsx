@@ -105,8 +105,8 @@ const CourseCreation = () => {
                 name="language"
                 options={[
                   "Выберите язык",
-                  "Русский",
                   "Казахский",
+                  "Русский",
                   "Английский",
                 ]}
                 onSelect={handleSelect}
@@ -144,7 +144,7 @@ const CourseCreation = () => {
               name="learn_description"
             />
           </div>
-          <button className="self-center bg-[#D9D9D9] text-[20px] font-medium hover:bg-[#A9A9A9] py-2 px-11 rounded-[10px]">
+          <button className="block mx-auto self-center bg-[#D9D9D9] text-[20px] font-medium hover:bg-[#A9A9A9] py-2 px-11 rounded-[10px]">
             Создать курс
           </button>
         </form>

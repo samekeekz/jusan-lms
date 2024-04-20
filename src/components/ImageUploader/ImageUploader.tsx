@@ -18,12 +18,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     const reader = new FileReader();
     reader.onload = (event) => {
       const base64String = event.target?.result as string;
-      // localStorage.setItem("uploadedImage", base64String);
       onImageSelect(selectedFile, base64String);
     };
     reader.readAsDataURL(selectedFile);
-
-    // onImageSelect(selectedFile, URL.createObjectURL(selectedFile));
   };
 
   return (
