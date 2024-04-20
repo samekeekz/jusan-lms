@@ -2,7 +2,7 @@ import ImageUploader from "@/components/ImageUploader/ImageUploader";
 import SingleSelect from "@/components/SingleSelect/SingleSelect";
 import VideoUploader from "@/components/VideoUploader/VideoUploader";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { Course, addCourse } from "@/store/slices/courseSlice";
+import { addCourse } from "@/store/slices/courseSlice";
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 

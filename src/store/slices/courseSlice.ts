@@ -29,19 +29,6 @@ interface Lesson {
   lesson_name: string;
   lesson_description: string;
   video: string;
-  quiz: Quiz;
-}
-
-interface Quiz {
-  id: number;
-  question: string;
-  answers: Answer[];
-}
-
-interface Answer {
-  id: number;
-  answer: string;
-  is_correct: boolean;
 }
 
 const initialState: CourseState = {
