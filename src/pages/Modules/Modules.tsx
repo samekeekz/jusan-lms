@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { useParams } from "react-router-dom";
-import { editModules } from "@/store/slices/courseSlice";
+import { Module, editModules } from "@/store/slices/courseSlice";
+import Pencil from "@/assets/pencil.png";
 
 const Modules = () => {
   const { id } = useParams();
@@ -9,8 +10,11 @@ const Modules = () => {
   const course = courses.find((course) => course.id === Number(id));
   const dispatch = useAppDispatch();
 
+  const [lessonName, setLessonName] = useState("");
   const [editMode, setEditMode] = useState(false);
-  const [editedModules, setEditedModules] = useState(course?.modules || []);
+  const [editedModules, setEditedModules] = useState<Module[]>(
+    course?.modules || []
+  );
 
   const handleAddModule = () => {
     const newModule = {
@@ -28,8 +32,18 @@ const Modules = () => {
   };
 
   const handleSave = () => {
+    const modulesWithNonEmptyLessons = editedModules.map((module) => ({
+      ...module,
+      lessons: module.lessons.filter(
+        (lesson) => lesson.lesson_name.trim() !== ""
+      ),
+    }));
+
     dispatch(
-      editModules({ courseId: course?.id ?? 0, modules: editedModules })
+      editModules({
+        courseId: course?.id ?? 0,
+        modules: modulesWithNonEmptyLessons,
+      })
     );
     setEditMode(false);
   };
@@ -68,18 +82,37 @@ const Modules = () => {
     setEditedModules(updatedModules);
   };
 
-  const handleAddLesson = (moduleId: number) => {
+  const handleAddLesson = (moduleId: number, lessonName: string) => {
     const updatedModules = editedModules.map((module) => {
       if (module.id === moduleId) {
         const newLesson = {
           id: module.lessons.length + 1,
-          lesson_name: "",
+          lesson_name: lessonName,
         };
-        return { ...module, lessons: [...module.lessons, newLesson] };
+        const updatedLessons = [...module.lessons, newLesson];
+        return { ...module, lessons: updatedLessons };
       }
       return module;
     });
     setEditedModules(updatedModules);
+  };
+
+  const handleDeleteLesson = (moduleId: number, lessonIndex: number) => {
+    const updatedModules = editedModules.map((module) => {
+      if (module.id === moduleId) {
+        const updatedLessons = module.lessons
+          .filter((_, index) => index !== lessonIndex)
+          .map((lesson, index) => ({ ...lesson, id: index + 1 }));
+        return { ...module, lessons: updatedLessons };
+      }
+      return module;
+    });
+    setEditedModules(updatedModules);
+  };
+
+  const handleAddFirstModule = () => {
+    handleAddModule();
+    setEditMode(true);
   };
 
   console.log(editedModules);
@@ -106,6 +139,7 @@ const Modules = () => {
                               className="text-lg w-full"
                               type="text"
                               placeholder="Название модуля"
+                              value={module.module_name}
                               onChange={(e) =>
                                 handleModuleChange(
                                   module.id,
@@ -119,6 +153,7 @@ const Modules = () => {
                             <textarea
                               className="text-lg w-full"
                               placeholder="Описание модуля"
+                              value={module.module_description}
                               onChange={(e) =>
                                 handleModuleChange(
                                   module.id,
@@ -143,6 +178,7 @@ const Modules = () => {
                                   className=""
                                   type="text"
                                   placeholder="Название урока"
+                                  value={lesson.lesson_name}
                                   onChange={(e) =>
                                     handleLessonChange(
                                       module.id,
@@ -153,7 +189,14 @@ const Modules = () => {
                                 />
                               </div>
                               {index !== editModules.length - 1 && (
-                                <span className="cursor-pointer ">X</span>
+                                <span
+                                  className="cursor-pointer"
+                                  onClick={() =>
+                                    handleDeleteLesson(module.id, index)
+                                  }
+                                >
+                                  X
+                                </span>
                               )}
                             </div>
                             {index === module.lessons.length - 1 && (
@@ -166,11 +209,16 @@ const Modules = () => {
                                     className="w-full"
                                     type="text"
                                     placeholder="Введите название урока и нажмите Enter"
+                                    onChange={(e) =>
+                                      setLessonName(e.target.value)
+                                    }
                                   />
                                 </div>
                                 <button
                                   className="shrink-0 border-[#D9D9D9] border-[2px] border-solid py-[6px] px-3 mr-[22px]"
-                                  onClick={() => handleAddLesson(module.id)}
+                                  onClick={() =>
+                                    handleAddLesson(module.id, lessonName)
+                                  }
                                 >
                                   + Создать урок
                                 </button>
@@ -195,33 +243,51 @@ const Modules = () => {
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-12">
                   <button
                     className="self-start flex items-center gap-2 bg-[#D9D9D9] hover:bg-[#A9A9A9] py-2 px-20 rounded-[10px]"
                     onClick={() => setEditMode(true)}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M14.293 3.293a1 1 0 0 1 1.414 0l1 1a1 1 0 0 1 0 1.414l-9 9a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391l9-9zM13 5l2-2v2h2l-2 2-2-2zm-1.293 1.293l-8 8-1.586-.586 8-8 1.586.586z"
-                        clipRule="evenodd"
+                    <div className="w-[15px] h-[15px]">
+                      <img
+                        className="w-full h-full"
+                        src={Pencil}
+                        alt="pencil icon"
                       />
-                    </svg>
+                    </div>
                     <p>Редактировать содержание</p>
                   </button>
-                  {editedModules?.map((module) => (
-                    <div key={module.id} className="flex flex-col gap-2">
-                      <h2 className="font-bold text-2xl">
-                        {module.module_name}
-                      </h2>
-                      <p>{module.module_description}</p>
-                    </div>
-                  ))}
+                  <div className="flex flex-col gap-8">
+                    {editedModules?.map((module) => (
+                      <div key={module.id} className="w-full flex flex-col">
+                        <div className="flex border-[#D9D9D9] border-[2px] border-l-[3px] border-l-[#FF0000] border-solid px-4 py-5">
+                          <h2 className="font-semibold text-[25px] leading-[20px] capitalize">
+                            <span>{module.id}. </span> {module.module_name}
+                          </h2>
+                        </div>
+                        {module.lessons.map((lesson) => (
+                          <div
+                            key={lesson.id}
+                            className="max-w-full ml-[56px] border-t-0 text-[20px] leading-[20px] flex justify-between items-center border-[#D9D9D9] border-[2px] border-solid px-5 py-3"
+                          >
+                            <div className="flex items-center gap-1">
+                              <p>
+                                {module.id}.{lesson.id}.
+                              </p>
+                              <p>{lesson.lesson_name}</p>
+                            </div>
+                            <div className="cursor-pointer w-[18px] h-[18px]">
+                              <img
+                                className="w-full h-full"
+                                src={Pencil}
+                                alt="pencil icon"
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -232,7 +298,7 @@ const Modules = () => {
                 Создайте первый модуль, чтоб добавить уроки
               </p>
               <button
-                onClick={handleAddModule}
+                onClick={handleAddFirstModule}
                 className="bg-[#D9D9D9] hover:bg-[#A9A9A9] py-2 px-20 rounded-[10px]"
               >
                 + Новый модуль

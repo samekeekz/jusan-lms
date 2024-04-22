@@ -18,7 +18,7 @@ export interface Course {
   modules: Module[];
 }
 
-interface Module {
+export interface Module {
   id: number;
   module_name: string;
   module_description: string;
