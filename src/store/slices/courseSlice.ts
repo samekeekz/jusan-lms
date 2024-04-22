@@ -42,7 +42,38 @@ const initialState: CourseState = {
       level: "Начинающий",
       recommended_load: "4-5 часов в неделю",
       learn_description: "Курс по программированию на языке Python",
-      modules: [],
+      modules: [
+        {
+          id: 1,
+          module_name: "Module 1",
+          module_description: "Module 1 description",
+          lessons: [
+            {
+              id: 1,
+              lesson_name: "Lesson 1",
+            },
+            {
+              id: 2,
+              lesson_name: "Lesson 2",
+            },
+          ],
+        },
+        {
+          id: 2,
+          module_name: "Module 2",
+          module_description: "Module 2 description",
+          lessons: [
+            {
+              id: 3,
+              lesson_name: "Lesson 3",
+            },
+            {
+              id: 4,
+              lesson_name: "Lesson 4",
+            },
+          ],
+        },
+      ],
     },
   ],
 };

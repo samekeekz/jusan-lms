@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Module, editModules } from "@/store/slices/courseSlice";
 import Pencil from "@/assets/pencil.png";
 
@@ -276,13 +276,16 @@ const Modules = () => {
                               </p>
                               <p>{lesson.lesson_name}</p>
                             </div>
-                            <div className="cursor-pointer w-[18px] h-[18px]">
+                            <Link
+                              to={`/course/${id}/module/${module.id}/lesson/${lesson.id}`}
+                              className="cursor-pointer w-[18px] h-[18px]"
+                            >
                               <img
                                 className="w-full h-full"
                                 src={Pencil}
                                 alt="pencil icon"
                               />
-                            </div>
+                            </Link>
                           </div>
                         ))}
                       </div>

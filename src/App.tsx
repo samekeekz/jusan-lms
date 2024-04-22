@@ -5,6 +5,7 @@ import CourseCreation from "./pages/CourseCreation/CourseCreation";
 import CourseLayout from "./layout/CourseLayout/CourseLayout";
 import CourseEdit from "./pages/CourseEdit/CourseEdit";
 import Modules from "./pages/Modules/Modules";
+import Lesson from "./pages/Lesson/Lesson";
 
 function App() {
   return (
@@ -17,6 +18,10 @@ function App() {
         <Route path="course/:id/description" element={<CourseEdit />} />
         <Route path="course/:id/content" element={<Modules />} />
         <Route path="course/:id/checklist" element={<h1>Course</h1>} />
+        <Route
+          path="course/:id/module/:moduleId/lesson/:lessonId"
+          element={<Lesson />}
+        />
       </Route>
     </Routes>
   );
