@@ -104,12 +104,17 @@ import {
   thematicBreakPlugin,
   toolbarPlugin,
 } from "@mdxeditor/editor";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "@mdxeditor/editor/style.css";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { useParams } from "react-router-dom";
 import SingleSelect from "@/components/SingleSelect/SingleSelect";
-import { editLesson } from "@/store/slices/courseSlice";
+import {
+  Course,
+  ILesson,
+  Module,
+  editLesson,
+} from "@/store/slices/courseSlice";
 
 const defaultSnippetContent = `
 export default function App() {
@@ -126,17 +131,26 @@ const Lesson = () => {
   const { id, moduleId, lessonId } = useParams();
   const dispatch = useAppDispatch();
   const { courses } = useAppSelector((state) => state.course);
-  const course = courses.find((course) => course.id === Number(id));
-  const module = course?.modules.find(
-    (module) => module.id === Number(moduleId)
-  );
-  const lesson = module?.lessons.find(
-    (lesson) => lesson.id === Number(lessonId)
-  );
-  const [lessonName, setLessonName] = useState(lesson?.lesson_name || "");
-  const [selectedLanguage, setSelectedLanguage] = useState(
-    lesson?.language || ""
-  );
+  const [course, setCourse] = useState<Course>();
+  const [module, setModule] = useState<Module>();
+  const [lesson, setLesson] = useState<ILesson>();
+  const [lessonName, setLessonName] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("");
+
+  useEffect(() => {
+    const selectedCourse = courses.find((c) => c.id === Number(id));
+    const selectedModule = selectedCourse?.modules.find(
+      (m) => m.id === Number(moduleId)
+    );
+    const selectedLesson = selectedModule?.lessons.find(
+      (l) => l.id === Number(lessonId)
+    );
+    setCourse(selectedCourse);
+    setModule(selectedModule);
+    setLesson(selectedLesson);
+    setLessonName(selectedLesson?.lesson_name || "");
+    setSelectedLanguage(selectedLesson?.language || "");
+  }, [id, moduleId, lessonId, courses]);
 
   const handleSelect = (name: string, option: string) => {
     setSelectedLanguage(option);

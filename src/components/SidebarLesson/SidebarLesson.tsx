@@ -1,135 +1,63 @@
 import Logo from "@/assets/Logo.png";
-import { Link, NavLink, useMatch, useParams } from "react-router-dom";
-import IconSettings from "@/assets/Vector.svg";
-import { useState } from "react";
+import { useAppSelector } from "@/hooks/redux";
+import { Link, NavLink, useLocation, useParams } from "react-router-dom";
 
 const SidebarLesson = () => {
-  const [isCoursesOpen, setIsCoursesOpen] = useState(true);
-  const { id } = useParams();
-  const isCreateActive = useMatch("/course/create");
-  const isDescriptionActive = useMatch(`/course/${id}/description`);
-
-  const toggleCoursesDropdown = () => {
-    setIsCoursesOpen((prev) => !prev);
-  };
+  const { id, moduleId, lessonId } = useParams();
+  const pathname = useLocation().pathname;
+  const { courses } = useAppSelector((state) => state.course);
+  const course = courses.find((course) => course.id === Number(id));
+  const module = course?.modules.find(
+    (module) => module.id === Number(moduleId)
+  );
+  const lesson = module?.lessons.find(
+    (lesson) => lesson.id === Number(lessonId)
+  );
 
   return (
-    <div className="font-montserrat w-[274px] h-screen shadow-lg pt-[60px] pb-11 px-[57px] flex flex-col bg-[#D9D9D9] rounded-[20px]">
-      <div className="relative shrink-0 w-40 h-20 mb-[77px]">
-        <img
-          src={Logo}
-          alt="Logo"
-          className="w-full h-full absolute top-0 left-0"
-        />
-      </div>
-      <ul className="flex flex-col gap-[45px] grow shrink-0 basis-auto">
-        <li className="m-0">
-          <div
-            className="inline-flex items-center gap-1 cursor-pointer"
-            onClick={toggleCoursesDropdown}
-          >
-            <div className="flex items-center h-[30px]">
-              <span className="mr-1">
-                <div className="w-[30px] h-[30px] bg-white"></div>
-              </span>
-              <span className="text-[20px] font-medium leading-5 text-black">
-                Курсы
-              </span>
-            </div>
-            <span className="cursor-pointer mt-[3px]">
-              {isCoursesOpen ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 15l7-7 7 7"
-                  />
-                </svg>
-              )}
-            </span>
-          </div>
-          {isCoursesOpen && (
-            <ul className="flex flex-col transition-colors duration-200 ease-in-out">
-              <li className="pl-[34px] text-[10px] font-medium leading-5 text-black hover:text-[#FF0000]">
-                <NavLink
-                  to={`/course/${id}/description`}
-                  className={
-                    isCreateActive || isDescriptionActive
-                      ? "text-[#FF0000]"
-                      : ""
-                  }
-                  style={{ display: "block" }}
-                >
-                  Описание
-                </NavLink>
-              </li>
-              {!isCreateActive && (
-                <>
-                  <li className="pl-[34px] text-[10px] font-medium leading-5 text-black hover:text-[#FF0000]">
-                    <NavLink
-                      to={`/course/${id}/content`}
-                      className={({ isActive }) =>
-                        [isActive ? "text-[#FF0000]" : ""].join(" ")
-                      }
-                      style={{ display: "block" }}
-                    >
-                      Содержание
-                    </NavLink>
-                  </li>
-                  <li className="pl-[34px] text-[10px] font-medium leading-5 text-black hover:text-[#FF0000]">
-                    <NavLink
-                      to={`/course/${id}/checklist`}
-                      className={({ isActive }) =>
-                        [isActive ? "text-[#FF0000]" : ""].join(" ")
-                      }
-                      style={{ display: "block" }}
-                    >
-                      Чек-лист
-                    </NavLink>
-                  </li>
-                </>
-              )}
-            </ul>
-          )}
-        </li>
-        <li className="m-0 grow"></li>
-        <li className="m-0">
-          <Link to="/settings" className="flex items-center h-[30px]">
-            <span className="mr-3">
-              <img
-                src={IconSettings}
-                alt="icon-settings"
-                className="w-[30px] h-[30px]"
-              />
-            </span>
-            <span className="text-[20px] font-medium leading-5 text-black">
-              Настройки
-            </span>
+    <div className="font-montserrat w-[274px] h-screen shadow-lg flex flex-col bg-[#D9D9D9] rounded-[20px] relative">
+      <div className="pt-[60px] px-[57px]">
+        <div className="relative shrink-0 w-40 h-20">
+          <Link to="/">
+            <img
+              src={Logo}
+              alt="Logo"
+              className="w-full h-full absolute top-0 left-0"
+            />
           </Link>
-        </li>
-      </ul>
+        </div>
+      </div>
+      <div className="w-full text-center mt-20">
+        <ul className="flex flex-col gap-9 shrink-0 basis-auto">
+          {course?.modules.map((module) => (
+            <li key={module.id} className="flex flex-col gap-5">
+              <h4 className="text-black font-medium text-[20px] leading-5">
+                {module.id}. {module.module_name}
+              </h4>
+              <ul className="flex flex-col gap-2">
+                {module.lessons.map((lesson) => (
+                  <li
+                    key={lesson.id}
+                    className="text-black font-medium text-[15px] leading-5"
+                  >
+                    <NavLink
+                      to={`/course/${id}/module/${module.id}/lesson/${lesson.id}`}
+                      className={`${
+                        pathname ===
+                        `/course/${id}/module/${module.id}/lesson/${lesson.id}`
+                          ? "bg-white"
+                          : ""
+                      } w-full`}
+                    >
+                      {module.id}.{lesson.id}. Подглава
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

@@ -4,58 +4,9 @@ import { Course } from "@/store/slices/courseSlice";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-// type Course = {
-//   id: number;
-//   course_name: string;
-//   course_description: string;
-// };
-
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const courses = useAppSelector((state) => state.course.courses);
-
-  // const courses = [
-  //   {
-  //     id: 1,
-  //     course_name: "Курс по программированию",
-  //     course_description: "Курс по программированию на языке Python",
-  //   },
-  //   {
-  //     id: 2,
-  //     course_name: "Курс по дизайну",
-  //     course_description: "Курс по дизайну на языке Figma",
-  //   },
-  //   {
-  //     id: 3,
-  //     course_name: "Курс по маркетингу",
-  //     course_description: "Курс по маркетингу в социальных сетях",
-  //   },
-  //   {
-  //     id: 3,
-  //     course_name: "Курс по маркетингу",
-  //     course_description: "Курс по маркетингу в социальных сетях",
-  //   },
-  //   {
-  //     id: 3,
-  //     course_name: "Курс по маркетингу",
-  //     course_description: "Курс по маркетингу в социальных сетях",
-  //   },
-  //   {
-  //     id: 3,
-  //     course_name: "Курс по маркетингу",
-  //     course_description: "Курс по маркетингу в социальных сетях",
-  //   },
-  //   {
-  //     id: 3,
-  //     course_name: "Курс по маркетингу",
-  //     course_description: "Курс по маркетингу в социальных сетях",
-  //   },
-  //   {
-  //     id: 3,
-  //     course_name: "Курс по маркетингу",
-  //     course_description: "Курс по маркетингу в социальных сетях",
-  //   },
-  // ];
 
   const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses);
 

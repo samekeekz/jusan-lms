@@ -3,6 +3,7 @@ import SingleSelect from "@/components/SingleSelect/SingleSelect";
 import VideoUploader from "@/components/VideoUploader/VideoUploader";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { addCourse } from "@/store/slices/courseSlice";
+import { enqueueSnackbar } from "notistack";
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -42,6 +43,7 @@ const CourseCreation = () => {
       recommended_load: selectedOptions.load,
       logo: selectedImage || new File([], ""),
       video: "",
+      score: 0,
       modules: [],
     };
 
@@ -59,6 +61,10 @@ const CourseCreation = () => {
       level: "",
       load: "",
     });
+
+    setTimeout(() => {
+      enqueueSnackbar("Курс успешно создан", { variant: "success" });
+    }, 300);
 
     navigate("/learn/courses");
   };

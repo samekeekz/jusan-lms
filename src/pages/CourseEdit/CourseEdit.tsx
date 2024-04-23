@@ -3,6 +3,7 @@ import SingleSelect from "@/components/SingleSelect/SingleSelect";
 import VideoUploader from "@/components/VideoUploader/VideoUploader";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { editCourse } from "@/store/slices/courseSlice";
+import { enqueueSnackbar } from "notistack";
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -59,12 +60,17 @@ const CourseEdit = () => {
       recommended_load: selectedOptions.load,
       logo: selectedImage || new File([], ""),
       video: "",
-      modules: [],
+      score: course?.score || 0,
+      modules: course?.modules || [],
     };
 
     localStorage.setItem(data.course_name, previewURL);
 
     console.log(data);
+
+    setTimeout(() => {
+      enqueueSnackbar("Курс успешно обновлен", { variant: "success" });
+    }, 300);
 
     dispatch(editCourse(data));
 

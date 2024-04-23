@@ -22,7 +22,7 @@ const Modules = () => {
     if (editMode && moduleInputRef.current) {
       moduleInputRef.current.focus();
     }
-  });
+  }, [editMode]);
 
   const handleAddModule = () => {
     const newModule = {
@@ -129,8 +129,6 @@ const Modules = () => {
     handleAddModule();
     setEditMode(true);
   };
-
-  console.log(editedModules);
 
   return (
     <div className="flex items-start gap-14">

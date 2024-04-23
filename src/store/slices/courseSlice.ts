@@ -15,6 +15,7 @@ export interface Course {
   level: string;
   recommended_load: string;
   learn_description: string;
+  score: number;
   modules: Module[];
 }
 
@@ -22,10 +23,10 @@ export interface Module {
   id: number;
   module_name: string;
   module_description: string;
-  lessons: Lesson[];
+  lessons: ILesson[];
 }
 
-interface Lesson {
+export interface ILesson {
   id: number;
   language: string;
   lesson_name: string;
@@ -33,7 +34,7 @@ interface Lesson {
   steps: Step[];
 }
 
-interface Step {
+export interface Step {
   id: number;
   step_name: string;
   step_description: string;
@@ -54,6 +55,7 @@ const initialState: CourseState = {
       level: "Начинающий",
       recommended_load: "4-5 часов в неделю",
       learn_description: "Курс по программированию на языке Python",
+      score: 0,
       modules: [
         {
           id: 1,
@@ -70,7 +72,7 @@ const initialState: CourseState = {
             {
               id: 2,
               lesson_name: "Lesson 2",
-              language: "Русский",
+              language: "Английский",
               markdown: "",
               steps: [],
             },
@@ -82,16 +84,16 @@ const initialState: CourseState = {
           module_description: "Module 2 description",
           lessons: [
             {
-              id: 3,
+              id: 1,
               lesson_name: "Lesson 3",
               language: "Русский",
               markdown: "",
               steps: [],
             },
             {
-              id: 4,
+              id: 2,
               lesson_name: "Lesson 4",
-              language: "Русский",
+              language: "Английский",
               markdown: "",
               steps: [],
             },
@@ -136,7 +138,7 @@ const courseSlice = createSlice({
       action: PayloadAction<{
         courseId: number;
         moduleId: number;
-        lesson: Lesson;
+        lesson: ILesson;
       }>
     ) {
       const { courseId, moduleId, lesson } = action.payload;
@@ -164,7 +166,7 @@ const courseSlice = createSlice({
         courseId: number;
         moduleId: number;
         lessonId: number;
-        updatedLesson: Partial<Lesson>;
+        updatedLesson: Partial<ILesson>;
       }>
     ) {
       const { courseId, moduleId, lessonId, updatedLesson } = action.payload;
