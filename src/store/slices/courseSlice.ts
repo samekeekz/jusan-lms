@@ -27,7 +27,19 @@ export interface Module {
 
 interface Lesson {
   id: number;
+  language: string;
   lesson_name: string;
+  markdown: string;
+  steps: Step[];
+}
+
+interface Step {
+  id: number;
+  step_name: string;
+  step_description: string;
+  step_content: string;
+  step_type: "text" | "code";
+  step_code: string;
 }
 
 const initialState: CourseState = {
@@ -51,10 +63,16 @@ const initialState: CourseState = {
             {
               id: 1,
               lesson_name: "Lesson 1",
+              language: "Русский",
+              markdown: "",
+              steps: [],
             },
             {
               id: 2,
               lesson_name: "Lesson 2",
+              language: "Русский",
+              markdown: "",
+              steps: [],
             },
           ],
         },
@@ -66,10 +84,16 @@ const initialState: CourseState = {
             {
               id: 3,
               lesson_name: "Lesson 3",
+              language: "Русский",
+              markdown: "",
+              steps: [],
             },
             {
               id: 4,
               lesson_name: "Lesson 4",
+              language: "Русский",
+              markdown: "",
+              steps: [],
             },
           ],
         },
@@ -134,6 +158,32 @@ const courseSlice = createSlice({
         course.modules = modules;
       }
     },
+    editLesson(
+      state,
+      action: PayloadAction<{
+        courseId: number;
+        moduleId: number;
+        lessonId: number;
+        updatedLesson: Partial<Lesson>;
+      }>
+    ) {
+      const { courseId, moduleId, lessonId, updatedLesson } = action.payload;
+      const course = state.courses.find((c) => c.id === courseId);
+      if (course) {
+        const module = course.modules.find((m) => m.id === moduleId);
+        if (module) {
+          const lessonIndex = module.lessons.findIndex(
+            (lesson) => lesson.id === lessonId
+          );
+          if (lessonIndex !== -1) {
+            module.lessons[lessonIndex] = {
+              ...module.lessons[lessonIndex],
+              ...updatedLesson,
+            };
+          }
+        }
+      }
+    },
   },
 });
 
@@ -145,6 +195,7 @@ export const {
   addModuleToCourse,
   editModules,
   addLessonToModule,
+  editLesson,
 } = actions;
 
 export default reducer;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { Link, useParams } from "react-router-dom";
 import { Module, editModules } from "@/store/slices/courseSlice";
@@ -16,6 +16,14 @@ const Modules = () => {
     course?.modules || []
   );
 
+  const moduleInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editMode && moduleInputRef.current) {
+      moduleInputRef.current.focus();
+    }
+  });
+
   const handleAddModule = () => {
     const newModule = {
       id: editedModules.length + 1,
@@ -25,6 +33,9 @@ const Modules = () => {
         {
           id: 1,
           lesson_name: "",
+          language: "Русский",
+          markdown: "",
+          steps: [],
         },
       ],
     };
@@ -88,6 +99,9 @@ const Modules = () => {
         const newLesson = {
           id: module.lessons.length + 1,
           lesson_name: lessonName,
+          language: "Русский",
+          markdown: "",
+          steps: [],
         };
         const updatedLessons = [...module.lessons, newLesson];
         return { ...module, lessons: updatedLessons };
@@ -95,6 +109,7 @@ const Modules = () => {
       return module;
     });
     setEditedModules(updatedModules);
+    setLessonName("");
   };
 
   const handleDeleteLesson = (moduleId: number, lessonIndex: number) => {
@@ -126,7 +141,7 @@ const Modules = () => {
             <div className="w-full flex flex-col">
               {editMode ? (
                 <div className="w-full flex flex-col gap-9">
-                  {editedModules?.map((module) => (
+                  {editedModules?.map((module, index) => (
                     <div className="">
                       <div className="flex gap-4">
                         <p className="pt-7 font-bold">{module.id}</p>
@@ -136,6 +151,7 @@ const Modules = () => {
                         >
                           <div className="border-[#D9D9D9] border-[2px] border-solid rounded-[10px] py-[5px] px-4">
                             <input
+                              ref={index === 0 ? moduleInputRef : null}
                               className="text-lg w-full"
                               type="text"
                               placeholder="Название модуля"
@@ -167,6 +183,33 @@ const Modules = () => {
                         </div>
                       </div>
                       <div className="border-[2px] border-t-0 border-solid border-[#D9D9D9] py-4 pl-5 pr-[65px] ml-[67px] max-w-full flex flex-col gap-3 relative">
+                        {module.lessons.length === 0 && (
+                          <div className="flex gap-3 w-full">
+                            <p className="invisible">{module.id}.1</p>
+                            <div className="grow shrink-0 border-[#D9D9D9] border-[2px] border-solid py-[6px] px-3">
+                              <input
+                                className="w-full"
+                                type="text"
+                                placeholder="Введите название урока и нажмите Enter"
+                                onChange={(e) => setLessonName(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    handleAddLesson(module.id, lessonName);
+                                  }
+                                }}
+                              />
+                            </div>
+                            <button
+                              className="shrink-0 border-[#D9D9D9] border-[2px] border-solid py-[6px] px-3 mr-[22px]"
+                              onClick={() =>
+                                handleAddLesson(module.id, lessonName)
+                              }
+                            >
+                              + Создать урок
+                            </button>
+                          </div>
+                        )}
                         {module.lessons.map((lesson, index) => (
                           <>
                             <div className="flex items-center gap-3">
@@ -212,6 +255,12 @@ const Modules = () => {
                                     onChange={(e) =>
                                       setLessonName(e.target.value)
                                     }
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter") {
+                                        e.preventDefault();
+                                        handleAddLesson(module.id, lessonName);
+                                      }
+                                    }}
                                   />
                                 </div>
                                 <button
