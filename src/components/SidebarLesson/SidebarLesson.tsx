@@ -3,16 +3,22 @@ import { useAppSelector } from "@/hooks/redux";
 import { Link, NavLink, useLocation, useParams } from "react-router-dom";
 
 const SidebarLesson = () => {
-  const { id, moduleId, lessonId } = useParams();
+  const { id } = useParams();
   const pathname = useLocation().pathname;
   const { courses } = useAppSelector((state) => state.course);
   const course = courses.find((course) => course.id === Number(id));
-  const module = course?.modules.find(
-    (module) => module.id === Number(moduleId)
-  );
-  const lesson = module?.lessons.find(
-    (lesson) => lesson.id === Number(lessonId)
-  );
+
+  const totalSteps = courses.reduce((acc, course) => {
+    // Iterate through each module
+    course.modules.forEach((module) => {
+      // Iterate through each lesson
+      module.lessons.forEach((lesson) => {
+        // Add the number of steps in the lesson to the accumulator
+        acc += lesson.steps.length;
+      });
+    });
+    return acc;
+  }, 0);
 
   return (
     <div className="font-montserrat w-[274px] h-screen shadow-lg flex flex-col bg-[#D9D9D9] rounded-[20px] relative">
@@ -27,7 +33,23 @@ const SidebarLesson = () => {
           </Link>
         </div>
       </div>
-      <div className="w-full text-center mt-20">
+      <div className="px-10 py-10">
+        <h2 className="text-black font-medium text-[20px] leading-5 mb-2">
+          Программа курса
+        </h2>
+        <p className="text-[#9D9D9D] font-medium text-[15px] leading-5 mb-4">
+          Прогресс по курсу : {course?.score}/{totalSteps}
+        </p>
+        <div className="h-2 bg-gray-300 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-red-700"
+            style={{
+              width: `${((course?.score ?? 0) / totalSteps) * 100}%`,
+            }}
+          ></div>
+        </div>
+      </div>
+      <div className="w-full text-center">
         <ul className="flex flex-col gap-9 shrink-0 basis-auto">
           {course?.modules.map((module) => (
             <li key={module.id} className="flex flex-col gap-5">

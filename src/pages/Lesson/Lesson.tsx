@@ -40,70 +40,74 @@
 // };
 
 // const Lesson = () => {
-//   const [markdown, setMarkdown] = useState(mdStr);
+// const [markdown, setMarkdown] = useState(mdStr);
 //   return (
 //     <div data-color-mode="light">
-//       <MarkdownEditor
-//         value={markdown}
-//         height="500px"
-//         onChange={(value) => setMarkdown(value)}
-//         toolbars={[
-//           "bold",
-//           "italic",
-//           "underline",
-//           "link",
-//           "quote",
-//           "image",
-//           uploadImage,
-//           "code",
-//           "undo",
-//           "redo",
-//           "preview",
-//           "fullscreen",
-//         ]}
-//       />
+// <MarkdownEditor
+//   value={markdown}
+//   height="500px"
+//   onChange={(value) => setMarkdown(value)}
+//   toolbars={[
+//     "bold",
+//     "italic",
+//     "underline",
+//     "link",
+//     "quote",
+//     "image",
+//     uploadImage,
+//     "code",
+//     "undo",
+//     "redo",
+//     "preview",
+//     "fullscreen",
+//   ]}
+// />
 //     </div>
 //   );
 // };
 
 // export default Lesson;
 
-import {
-  AdmonitionDirectiveDescriptor,
-  BlockTypeSelect,
-  BoldItalicUnderlineToggles,
-  ChangeCodeMirrorLanguage,
-  CodeToggle,
-  ConditionalContents,
-  CreateLink,
-  DiffSourceToggleWrapper,
-  InsertCodeBlock,
-  InsertImage,
-  InsertSandpack,
-  InsertTable,
-  InsertThematicBreak,
-  ListsToggle,
-  MDXEditor,
-  MDXEditorMethods,
-  SandpackConfig,
-  ShowSandpackInfo,
-  UndoRedo,
-  codeBlockPlugin,
-  codeMirrorPlugin,
-  diffSourcePlugin,
-  directivesPlugin,
-  headingsPlugin,
-  imagePlugin,
-  linkDialogPlugin,
-  linkPlugin,
-  listsPlugin,
-  markdownShortcutPlugin,
-  quotePlugin,
-  sandpackPlugin,
-  tablePlugin,
-  thematicBreakPlugin,
-  toolbarPlugin,
-} from "@mdxeditor/editor";
+// import {
+//   AdmonitionDirectiveDescriptor,
+//   BlockTypeSelect,
+//   BoldItalicUnderlineToggles,
+//   ChangeCodeMirrorLanguage,
+//   CodeToggle,
+//   ConditionalContents,
+//   CreateLink,
+//   DiffSourceToggleWrapper,
+//   InsertCodeBlock,
+//   InsertImage,
+//   InsertSandpack,
+//   InsertTable,
+//   InsertThematicBreak,
+//   ListsToggle,
+//   MDXEditor,
+//   MDXEditorMethods,
+//   SandpackConfig,
+//   ShowSandpackInfo,
+//   UndoRedo,
+//   codeBlockPlugin,
+//   codeMirrorPlugin,
+//   diffSourcePlugin,
+//   directivesPlugin,
+//   headingsPlugin,
+//   imagePlugin,
+//   linkDialogPlugin,
+//   linkPlugin,
+//   listsPlugin,
+//   markdownShortcutPlugin,
+//   quotePlugin,
+//   sandpackPlugin,
+//   tablePlugin,
+//   thematicBreakPlugin,
+//   toolbarPlugin,
+// } from "@mdxeditor/editor";
+// import MarkdownEditor, { ICommand } from "@uiw/react-markdown-editor";
+// import { EditorContext } from "@uiw/react-md-editor";
+import MDEditor, { commands } from "@uiw/react-md-editor";
+
 import { useEffect, useRef, useState } from "react";
 import "@mdxeditor/editor/style.css";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
@@ -115,6 +119,7 @@ import {
   Module,
   editLesson,
 } from "@/store/slices/courseSlice";
+import { enqueueSnackbar } from "notistack";
 
 const defaultSnippetContent = `
 export default function App() {
@@ -137,6 +142,15 @@ const Lesson = () => {
   const [lessonName, setLessonName] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");
 
+  const [md, setMd] = useState(() => lesson?.markdown || "");
+
+  console.log(id, moduleId, lessonId);
+
+  // const ref = useRef<MDXEditorMethods>(null);
+  useEffect(() => {
+    setMd(lesson?.markdown || "");
+  }, []);
+
   useEffect(() => {
     const selectedCourse = courses.find((c) => c.id === Number(id));
     const selectedModule = selectedCourse?.modules.find(
@@ -150,47 +164,46 @@ const Lesson = () => {
     setLesson(selectedLesson);
     setLessonName(selectedLesson?.lesson_name || "");
     setSelectedLanguage(selectedLesson?.language || "");
+
+    console.log(selectedLesson?.markdown);
   }, [id, moduleId, lessonId, courses]);
 
   const handleSelect = (name: string, option: string) => {
     setSelectedLanguage(option);
   };
 
-  const ref = useRef<MDXEditorMethods>(null);
-  const [md, setMd] = useState(lesson?.markdown || "");
+  // const simpleSandpackConfig: SandpackConfig = {
+  //   defaultPreset: "react",
+  //   presets: [
+  //     {
+  //       label: "React",
+  //       name: "react",
+  //       meta: "live react",
+  //       sandpackTemplate: "react",
+  //       sandpackTheme: "light",
+  //       snippetFileName: "/App.js",
+  //       snippetLanguage: "jsx",
+  //       initialSnippetContent: defaultSnippetContent,
+  //     },
+  //   ],
+  // };
 
-  const simpleSandpackConfig: SandpackConfig = {
-    defaultPreset: "react",
-    presets: [
-      {
-        label: "React",
-        name: "react",
-        meta: "live react",
-        sandpackTemplate: "react",
-        sandpackTheme: "light",
-        snippetFileName: "/App.js",
-        snippetLanguage: "jsx",
-        initialSnippetContent: defaultSnippetContent,
-      },
-    ],
-  };
-
-  async function imageUploadHandler(image: File) {
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target && typeof event.target.result === "string") {
-          resolve(event.target.result);
-        } else {
-          reject(new Error("Failed to read image file."));
-        }
-      };
-      reader.onerror = () => {
-        reject(new Error("Failed to read image file."));
-      };
-      reader.readAsDataURL(image);
-    });
-  }
+  // async function imageUploadHandler(image: File) {
+  //   return new Promise<string>((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.onload = (event) => {
+  //       if (event.target && typeof event.target.result === "string") {
+  //         resolve(event.target.result);
+  //       } else {
+  //         reject(new Error("Failed to read image file."));
+  //       }
+  //     };
+  //     reader.onerror = () => {
+  //       reject(new Error("Failed to read image file."));
+  //     };
+  //     reader.readAsDataURL(image);
+  //   });
+  // }
 
   const handleSave = () => {
     if (!course || !module || !lesson) return;
@@ -208,6 +221,8 @@ const Lesson = () => {
         updatedLesson: updatedLesson,
       })
     );
+
+    enqueueSnackbar("Сохранено", { variant: "success" });
   };
   return (
     <div className="h-screen flex flex-col items-center">
@@ -229,7 +244,14 @@ const Lesson = () => {
           onSelect={handleSelect}
         />
       </div>
-      <MDXEditor
+      <div className="w-full" data-color-mode="light">
+        <MDEditor
+          value={md}
+          height="500px"
+          autoFocus
+          onChange={(value) => setMd(value!)}
+        />
+        {/* <MDXEditor
         className="self-stretch"
         ref={ref}
         markdown={md}
@@ -266,40 +288,41 @@ const Lesson = () => {
           toolbarPlugin({
             toolbarContents: () => (
               <DiffSourceToggleWrapper>
-                <UndoRedo />
-                <BoldItalicUnderlineToggles />
-                <CodeToggle />
-                <ListsToggle options={["bullet", "number", "check"]} />
-                <BlockTypeSelect />
-                <CreateLink />
-                <InsertImage />
-                <InsertTable />
-                <InsertThematicBreak />
-                <ConditionalContents
-                  options={[
-                    {
-                      when: (editor) => editor?.editorType === "codeblock",
-                      contents: () => <ChangeCodeMirrorLanguage />,
-                    },
-                    {
-                      when: (editor) => editor?.editorType === "sandpack",
-                      contents: () => <ShowSandpackInfo />,
-                    },
-                    {
-                      fallback: () => (
-                        <>
-                          <InsertCodeBlock />
-                          <InsertSandpack />
-                        </>
-                      ),
-                    },
-                  ]}
-                />
+              <UndoRedo />
+              <BoldItalicUnderlineToggles />
+              <CodeToggle />
+              <ListsToggle options={["bullet", "number", "check"]} />
+              <BlockTypeSelect />
+              <CreateLink />
+              <InsertImage />
+              <InsertTable />
+              <InsertThematicBreak />
+              <ConditionalContents
+              options={[
+                {
+                  when: (editor) => editor?.editorType === "codeblock",
+                  contents: () => <ChangeCodeMirrorLanguage />,
+                },
+                {
+                  when: (editor) => editor?.editorType === "sandpack",
+                  contents: () => <ShowSandpackInfo />,
+                },
+                {
+                  fallback: () => (
+                    <>
+                    <InsertCodeBlock />
+                    <InsertSandpack />
+                    </>
+                  ),
+                },
+              ]}
+              />
               </DiffSourceToggleWrapper>
             ),
           }),
         ]}
-      />
+      /> */}
+      </div>
       <button
         className="self-center bg-[#D9D9D9] hover:bg-[#A9A9A9] py-2 px-8 rounded-[10px]"
         onClick={handleSave}

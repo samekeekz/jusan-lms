@@ -68,9 +68,7 @@ const CourseEdit = () => {
 
     console.log(data);
 
-    setTimeout(() => {
-      enqueueSnackbar("Курс успешно обновлен", { variant: "success" });
-    }, 300);
+    enqueueSnackbar("Курс успешно обновлен", { variant: "success" });
 
     dispatch(editCourse(data));
 

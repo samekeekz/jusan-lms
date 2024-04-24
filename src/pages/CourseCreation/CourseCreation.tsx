@@ -62,9 +62,7 @@ const CourseCreation = () => {
       load: "",
     });
 
-    setTimeout(() => {
-      enqueueSnackbar("Курс успешно создан", { variant: "success" });
-    }, 300);
+    enqueueSnackbar("Курс успешно создан", { variant: "success" });
 
     navigate("/learn/courses");
   };

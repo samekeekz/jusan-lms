@@ -3,6 +3,8 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { Link, useParams } from "react-router-dom";
 import { Module, editModules } from "@/store/slices/courseSlice";
 import Pencil from "@/assets/pencil.png";
+import { enqueueSnackbar } from "notistack";
+import { UserBadge } from "@/components/UserBadge";
 
 const Modules = () => {
   const { id } = useParams();
@@ -56,6 +58,8 @@ const Modules = () => {
         modules: modulesWithNonEmptyLessons,
       })
     );
+    enqueueSnackbar("Сохранено", { variant: "success" });
+
     setEditMode(false);
   };
 
@@ -357,13 +361,7 @@ const Modules = () => {
           )}
         </div>
       </div>
-      <div className="flex shrink-0 items-center gap-3 bg-[#D9D9D9] rounded-[20px] px-5 py-4">
-        <div className="w-[50px] h-[50px] bg-white rounded-full"></div>
-        <div className="flex flex-col">
-          <p>Самат Белентбай</p>
-          <p className="underline cursor-pointer">Ментор</p>
-        </div>
-      </div>
+      <UserBadge />
     </div>
   );
 };
